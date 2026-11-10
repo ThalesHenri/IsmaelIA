@@ -1,0 +1,41 @@
+{% extends "main/base.html" %}
+{% block title %}Orçamento | Fotógrafo{% endblock %}
+{% block content %}
+<section class="secao titulo-secao">
+    <div class="container">
+        <h2>Solicitar Orçamento</h2>
+        <p style="color:#555;">Preencha os dados abaixo e entraremos em contato.</p>
+    </div>
+</section>
+
+<section class="secao">
+    <div class="container">
+        <form method="post" class="formulario">
+            {% csrf_token %}
+            <label for="nome">Nome *</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="telefone">Telefone</label>
+            <input type="text" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX">
+
+            <label for="pacote">Pacote desejado</label>
+            <select id="pacote" name="pacote">
+                <option value="">Selecione um pacote</option>
+                {% for pacote in pacotes %}
+                <option value="{{ pacote.id }}">{{ pacote.nome }} - R$ {{ pacote.preco|floatformat:2 }}</option>
+                {% empty %}
+                <option value="" disabled>Nenhum pacote disponível</option>
+                {% endfor %}
+            </select>
+
+            <label for="mensagem">Mensagem</label>
+            <textarea id="mensagem" name="mensagem" placeholder="Conte um pouco sobre o seu evento..."></textarea>
+
+            <button type="submit" class="botao">Enviar solicitação</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

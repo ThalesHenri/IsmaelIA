@@ -1,0 +1,86 @@
+{% extends "main/base.html" %}
+
+{% block title %}Encontre suas fotos — Ismael Pessoa{% endblock %}
+{% block body_class %}scan-page{% endblock %}
+
+{% block content %}
+<section class="scan-section">
+  <div class="scan-hero">
+    <h1>Encontre suas fotos</h1>
+    <p>Escaneie seu rosto ou envie uma foto para localizar suas imagens no evento de Ismael Pessoa.</p>
+    {% if evento %}
+      <p class="evento-info"><strong>Evento:</strong> {{ evento.nome }} &bull; {{ evento.data|date:"d/m/Y" }}</p>
+    {% endif %}
+  </div>
+
+  <div class="scan-card">
+    <div class="camera-box" id="cameraBox">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="canvas"></canvas>
+      <div class="camera-overlay">
+        <div class="frame"></div>
+      </div>
+      <div class="camera-hint">Posicione o rosto aqui</div>
+    </div>
+
+    <div class="scan-controls">
+      <button type="button" class="btn btn-primary btn-scan" id="btnScan">Escanear Rosto</button>
+      <button type="button" class="btn btn-outline" id="btnUpload">Enviar Foto</button>
+      <input type="file" id="fileInput" accept="image/*" class="hidden">
+    </div>
+
+    <div class="scan-status" id="scanStatus">
+      <div class="spinner"></div>
+      <p id="statusText">Analisando rosto...</p>
+    </div>
+
+    <div id="resultadoScan" class="resultado-scan hidden">
+      <div class="resultado-badge" id="badgeTotal">0 fotos encontradas</div>
+      <p>Clique abaixo para ver a prévia com marca d'água e o QR code de pagamento.</p>
+      <a href="{% url 'resultado' 'DEMO' %}" class="btn btn-primary mt-3">Ver prévia e QR code</a>
+    </div>
+  </div>
+</section>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const video = document.getElementById('video');
+  const btnScan = document.getElementById('btnScan');
+  const btnUpload = document.getElementById('btnUpload');
+  const fileInput = document.getElementById('fileInput');
+  const scanStatus = document.getElementById('scanStatus');
+  const statusText = document.getElementById('statusText');
+  const resultadoScan = document.getElementById('resultadoScan');
+  const badgeTotal = document.getElementById('badgeTotal');
+
+  async function initCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      video.srcObject = stream;
+    } catch (e) {
+      console.warn('Câmera não disponível:', e);
+    }
+  }
+  initCamera();
+
+  function simularEscaneamento(texto) {
+    scanStatus.style.display = 'block';
+    statusText.textContent = texto;
+    btnScan.disabled = true;
+    setTimeout(function() {
+      badgeTotal.textContent = '4 fotos encontradas';
+      scanStatus.style.display = 'none';
+      resultadoScan.classList.remove('hidden');
+    }, 2500);
+  }
+
+  btnScan.addEventListener('click', function() { simularEscaneamento('Analisando rosto...'); });
+  btnUpload.addEventListener('click', function() { fileInput.click(); });
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length > 0) simularEscaneamento('Processando imagem enviada...');
+  });
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}{{ pacote.nome }} | Fotógrafo{% endblock %}
+{% block content %}
+<section class="secao detalhe">
+    <div class="container">
+        <div class="conteudo-principal">
+            {% if pacote.foto %}
+            <img class="detalhe-imagem" src="{{ pacote.foto.url }}" alt="Foto do pacote {{ pacote.nome }}">
+            {% else %}
+            <img class="detalhe-imagem" src="{% static 'img/foto-padrao.jpg' %}" alt="Imagem padrão para o pacote {{ pacote.nome }}">
+            {% endif %}
+            <h1>{{ pacote.nome }}</h1>
+            <p><strong>Preço:</strong> R$ {{ pacote.preco|floatformat:2 }}</p>
+            {% if pacote.duracao %}<p><strong>Duração:</strong> {{ pacote.duracao }}</p>{% endif %}
+            <p class="badge">Pacote {{ pacote.destaque|yesno:"Destaque,Regular" }}</p>
+            <h2>Descrição</h2>
+            <p>{{ pacote.descricao }}</p>
+            <h2>O que está incluído</h2>
+            {% if pacote.incluindo %}
+            <div>{{ pacote.incluindo|linebreaks }}</div>
+            {% else %}
+            <p>Nenhum item informado.</p>
+            {% endif %}
+            <a href="{% url 'orcamento' %}" class="botao" style="margin-top:1.5rem;">Solicitar orçamento para este pacote</a>
+            <a href="{% url 'pacote_lista' %}" class="botao botao-secundario" style="margin-left:0.75rem;margin-top:0.5rem;">Voltar aos pacotes</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

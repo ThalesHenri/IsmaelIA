@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}Pacotes | Fotógrafo{% endblock %}
+{% block content %}
+<section class="secao titulo-secao">
+    <div class="container">
+        <h2>Nossos Pacotes</h2>
+        <p style="color:#555;">Escolha o pacote que melhor atenda à sua ocasião</p>
+    </div>
+</section>
+
+<section class="secao">
+    <div class="container">
+        <div class="pacotes-grid">
+            {% for pacote in pacotes %}
+            <div class="card-pacote">
+                <h3>{{ pacote.nome }}</h3>
+                {% if pacote.foto %}
+                <img src="{{ pacote.foto.url }}" alt="Foto do pacote {{ pacote.nome }}" loading="lazy">
+                {% else %}
+                <img src="{% static 'img/foto-padrao.jpg' %}" alt="Imagem padrão para o pacote {{ pacote.nome }}" loading="lazy">
+                {% endif %}
+                <div class="preco">R$ {{ pacote.preco|floatformat:2 }}</div>
+                <p style="margin-bottom:0.75rem;">{{ pacote.descricao }}</p>
+                <p style="margin-bottom:0.75rem;"><strong>Duração:</strong> {{ pacote.duracao|default:"—" }}</p>
+                <p style="margin-bottom:0.75rem;"><strong>Incluído:</strong> {{ pacote.incluindo|linebreaksbr|default:"—" }}</p>
+                <a href="{% url 'pacote_detalhe' pacote.slug %}" class="botao">Ver detalhes</a>
+            </div>
+            {% empty %}
+            <p style="color:#555;">Nenhum pacote disponível no momento.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

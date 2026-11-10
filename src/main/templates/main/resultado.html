@@ -1,0 +1,45 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Suas Fotos — {{ sessao.evento.nome }}{% endblock %}
+{% block body_class %}resultado-page{% endblock %}
+
+{% block content %}
+<section class="resultado-section">
+  <div class="container-resultado">
+    <div class="resultado-header">
+      <h1>Suas Fotos</h1>
+      <p class="evento">{{ sessao.evento.nome }} &bull; {{ sessao.evento.data|date:"d/m/Y" }}</p>
+      <p class="contagem">{{ sessao.total_fotos_encontradas }} foto(s) encontrada(s)</p>
+    </div>
+
+    <div class="preview-area">
+      <h2>Prévia com Marca d'Água</h2>
+      <div class="fotos-grid">
+        {% for foto in fotos %}
+          <div class="foto-item">
+            <img src="{% static 'img/foto-padrao.jpg' %}" alt="Prévia protegida com marca d'água">
+            <div class="watermark-badge">© Ismael Pessoa — Amostra</div>
+          </div>
+        {% empty %}
+          <p class="empty">Nenhuma foto disponível no momento.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="pagamento-card">
+      <h2>Adquira suas fotos</h2>
+      <p class="valor">R$ {{ sessao.valor_total }} <span>total</span></p>
+      <div class="qr-container">
+        <img src="data:image/png;base64,{{ qr_b64 }}" alt="QR Code Pix" class="qr-img">
+        <p class="qr-label">Escaneie para pagar via Pix (demonstração)</p>
+      </div>
+      {% if not sessao.pago %}
+        <button class="btn-pagar">Pagar e receber alta resolução</button>
+      {% else %}
+        <span class="badge-pago">Pagamento confirmado — fotos liberadas</span>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

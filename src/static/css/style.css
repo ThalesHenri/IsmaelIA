@@ -1,0 +1,119 @@
+/* ========================================
+   Ismael Pessoa — Design System Preto & Branco
+   ======================================== */
+:root {
+  --color-bg: #ffffff;
+  --color-bg-alt: #f5f5f5;
+  --color-text: #000000;
+  --color-text-muted: #666666;
+  --color-border: #e5e5e5;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.container { width: 100%; padding: 0 20px; margin: 0 auto; }
+
+/* Header */
+.site-header { background: var(--color-bg); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 100; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; }
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 700; font-size: 1.5rem; color: var(--color-text); font-family: var(--font-serif); letter-spacing: 0.02em; }
+.logo-mark { width: 36px; height: 36px; background: var(--color-text); color: var(--color-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; }
+.logo-text { font-family: var(--font-sans); font-size: 1rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+
+/* Footer */
+.site-footer { background: var(--color-bg); border-top: 1px solid var(--color-border); padding: 32px 20px; margin-top: 80px; }
+.site-footer .container { text-align: center; }
+.footer-copy { margin: 0 0 6px 0; color: var(--color-text); font-size: 0.9rem; font-weight: 600; }
+.footer-note { margin: 0; color: var(--color-text-muted); font-size: 0.8rem; }
+
+/* Utilitários */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+
+/* Índice de ajustes gerais para templates existentes do main (home, pacotes, etc.) */
+.btn-primary, .btn-outline {
+  font-family: var(--font-sans);
+}
+
+/* ========================================
+   Scan page
+   ======================================== */
+.scan-section { padding: 40px 20px; min-height: 70vh; display: flex; flex-direction: column; align-items: center; }
+.scan-hero { max-width: 560px; text-align: center; margin-bottom: 32px; }
+.scan-hero h1 { font-family: var(--font-serif); font-size: 2rem; margin: 0 0 12px 0; color: #000; line-height: 1.2; }
+.scan-hero p { color: #666; font-size: 1rem; margin: 0; line-height: 1.6; }
+.evento-info { margin: 24px 0; color: #666; font-size: 0.95rem; text-align: center; }
+.evento-info strong { color: #000; }
+
+.scan-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 560px; box-shadow: 0 20px 60px rgba(0,0,0,0.08); }
+.camera-box { position: relative; width: 100%; max-width: 340px; margin: 0 auto 28px; border-radius: 20px; overflow: hidden; background: #000; border: 2px solid #e5e5e5; }
+.camera-box video { width: 100%; height: auto; display: block; }
+.camera-box canvas { display: none; }
+.camera-overlay { position: absolute; inset: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; }
+.camera-overlay .frame { width: 80%; height: 80%; border: 2px dashed rgba(255,255,255,0.5); border-radius: 16px; }
+.camera-hint { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+
+.scan-controls { display: flex; gap: 12px; flex-direction: column; align-items: stretch; margin-bottom: 28px; }
+.scan-controls .btn { width: 100%; padding: 16px; font-size: 1rem; font-weight: 600; border-radius: 12px; cursor: pointer; border: none; font-family: var(--font-sans); transition: transform .1s; }
+.scan-controls .btn:active { transform: scale(0.98); }
+.btn-primary { background: #000; color: #fff; }
+.btn-primary:hover { background: #1a1a1a; }
+.btn-outline { background: transparent; color: #000; border: 2px solid #000; }
+.btn-outline:hover { background: #f5f5f5; }
+
+.hidden { display: none !important; }
+
+.scan-status { margin-top: 20px; text-align: center; }
+.spinner { width: 40px; height: 40px; border: 4px solid #e5e5e5; border-top-color: #000; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.scan-status p { color: #666; font-size: 0.95rem; margin: 0; }
+
+.resultado-scan { margin-top: 24px; padding: 24px; background: #f5f5f5; border-radius: 16px; text-align: center; }
+.resultado-badge { display: inline-block; font-family: var(--font-serif); font-size: 1.75rem; color: #000; font-weight: 700; margin-bottom: 12px; }
+.resultado-scan p { color: #666; font-size: 0.95rem; margin-bottom: 16px; }
+.mt-3 { margin-top: 16px; }
+
+/* ========================================
+   Resultado page
+   ======================================== */
+.resultado-section { padding: 40px 20px; min-height: 75vh; }
+.container-resultado { max-width: 640px; margin: 0 auto; }
+.resultado-header { text-align: center; margin-bottom: 32px; }
+.resultado-header h1 { font-family: var(--font-serif); font-size: 2rem; margin: 0 0 8px 0; color: #000; }
+.resultado-header .evento { color: #666; font-size: 1rem; margin-bottom: 16px; }
+.resultado-header .contagem { font-size: 1.1rem; color: #000; font-weight: 600; }
+
+.preview-area { margin-bottom: 32px; }
+.preview-area h2 { font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 16px; color: #000; text-align: center; }
+.fotos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.foto-item { position: relative; border-radius: 16px; overflow: hidden; background: #e5e5e5; aspect-ratio: 1; }
+.foto-item img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; }
+.watermark-badge { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.85); color: #000; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.05em; border: 1px solid #000; }
+.empty { text-align: center; color: #666; font-size: 1rem; padding: 40px 0; }
+
+.pagamento-card { background: #fff; border: 2px solid #000; border-radius: 20px; padding: 28px 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+.pagamento-card h2 { font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 12px; color: #000; text-align: center; }
+.valor { font-size: 1.75rem; font-weight: 700; color: #000; text-align: center; margin-bottom: 24px; }
+.valor span { font-size: 1rem; font-weight: 400; color: #666; }
+
+.qr-container { text-align: center; margin-bottom: 20px; }
+.qr-img { width: 220px; height: 220px; display: block; margin: 0 auto 12px; background: #fff; padding: 12px; border: 2px solid #000; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+.qr-label { color: #666; font-size: 0.9rem; }
+
+.btn-pagar { width: 100%; padding: 16px; font-size: 1rem; font-weight: 600; background: #000; color: #fff; border: none; border-radius: 12px; cursor: pointer; font-family: var(--font-sans); }
+.btn-pagar:hover { background: #1a1a1a; }
+.badge-pago { display: inline-block; background: #f5f5f5; color: #000; padding: 10px 18px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; border: 1px solid #000; width: 100%; text-align: center; }
+
+@media (min-width: 640px) {
+  .fotos-grid { grid-template-columns: repeat(3, 1fr); }
+}

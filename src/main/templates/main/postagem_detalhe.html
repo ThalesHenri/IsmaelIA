@@ -1,0 +1,28 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}{{ postagem.titulo }} | Fotógrafo{% endblock %}
+{% block content %}
+<section class="secao detalhe">
+    <div class="container">
+        <div class="conteudo-principal">
+            <h1>{{ postagem.titulo }}</h1>
+            {% if postagem.data_evento %}
+            <p><span class="badge">Data do evento:</span> {{ postagem.data_evento|date:"d/m/Y" }}</p>
+            {% endif %}
+            {% if postagem.categoria %}
+            <p><span class="badge">Categoria:</span> {{ postagem.categoria }}</p>
+            {% endif %}
+
+            {% if postagem.foto %}
+            <img class="imagem-detalhe" src="{{ postagem.foto.url }}" alt="{{ postagem.titulo }}">
+            {% else %}
+            <img class="imagem-detalhe" src="{% static 'img/foto3.jpg' %}" alt="Fotógrafo em uma paisagem de montanha">
+            {% endif %}
+
+            <p>{{ postagem.descricao }}</p>
+
+            <a href="{% url 'postagem_lista' %}" class="botao botao-secundario" style="margin-top:1.5rem;">Voltar aos eventos</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

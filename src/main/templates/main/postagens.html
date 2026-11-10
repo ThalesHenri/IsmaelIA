@@ -1,0 +1,159 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}Eventos | Fotógrafo{% endblock %}
+{% block content %}
+<section class="secao titulo-secao">
+    <div class="container">
+        <h2>Eventos Recentes</h2>
+        <p style="color:#555;">Fotografias de eventos realizados ao longo do tempo</p>
+    </div>
+</section>
+
+<section class="secao">
+    <div class="container">
+        <div class="posts-grid">
+            {% for postagem in postagens %}
+            <div class="post-card">
+                {% if postagem.foto %}
+                <img src="{{ postagem.foto.url }}" alt="{{ postagem.titulo }}">
+                {% else %}
+                <img src="{% static 'img/foto3.jpg' %}" alt="Fotógrafo em uma paisagem de montanha">
+                {% endif %}
+                <div class="conteudo">
+                    <h3>{{ postagem.titulo }}</h3>
+                    <div class="data">
+                        {{ postagem.data_evento|date:"d/m/Y"|default:"—" }}
+                        {% if postagem.categoria %} • {{ postagem.categoria }}{% endif %}
+                    </div>
+                    <p>{{ postagem.descricao|truncatewords:25 }}</p>
+                    <a href="{% url 'postagem_detalhe' postagem.slug %}" class="botao botao-secundario">Ver detalhes</a>
+                </div>
+            </div>
+            {% empty %}
+            <p style="color:#555;">Nenhum evento publicado no momento.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="secao reconhecimento-secao">
+    <div class="container">
+        <div class="titulo-secao">
+            <h2>Encontre suas fotos no evento</h2>
+            <p>Envie uma foto do seu rosto e nossa IA localiza suas imagens na galeria do evento.</p>
+        </div>
+
+        <div class="reconhecimento-grid">
+            <article class="card-reconhecimento">
+                <!-- Passo 1: upload -->
+                <div class="rec-passo rec-passo-ativo" data-passo="1">
+                    <div class="rec-icone">📷</div>
+                    <h3>Envie sua foto</h3>
+                    <p>Escolha uma foto recente do seu rosto, bem iluminada e de frente para a câmera.</p>
+
+                    <label class="rec-upload">
+                        <input type="file" accept="image/*" id="rec-foto">
+                        <span class="rec-botao">Selecionar foto</span>
+                    </label>
+
+                    <div class="rec-dica">Formatos aceitos: JPG, PNG • Tamanho máximo: 5 MB</div>
+
+                    <div id="rec-preview" class="rec-preview"></div>
+
+                    <p class="rec-avisos">
+                        <span class="rec-avisos-icone">ℹ</span>
+                        Apenas para reconhecimento de convidados cadastrados neste evento.
+                    </p>
+                </div>
+
+                <!-- Passo 2: IA analisando -->
+                <div class="rec-passo" data-passo="2">
+                    <div class="rec-icone">✨</div>
+                    <h3>IA analisando</h3>
+                    <p>Extraindo traços faciais e comparando com o banco de fotos do evento.</p>
+
+                    <div class="rec-progresso">
+                        <div class="rec-barra" style="--p: 0%"></div>
+                    </div>
+
+                    <p class="rec-status">
+                        Comparando com <strong class="rec-contador">0</strong> fotos cadastradas
+                    </p>
+                </div>
+
+                <!-- Passo 3: resultado -->
+                <div class="rec-passo rec-resultado" data-passo="3">
+                    <div class="rec-icone rec-icone-sucesso">✓</div>
+                    <h3>Pessoa reconhecida</h3>
+                    <p>Encontramos <strong>8 fotos</strong> suas nas galerias deste evento.</p>
+
+                    <div class="rec-fotos">
+                        <img src="{% static 'img/foto1.jpg' %}" alt="Foto sua no evento">
+                        <img src="{% static 'img/foto4.jpg' %}" alt="Foto sua no evento">
+                        <img src="{% static 'img/foto2.jpg' %}" alt="Foto sua no evento">
+                        <img src="{% static 'img/foto3.jpg' %}" alt="Foto sua no evento">
+                    </div>
+
+                    <a href="#" class="botao">Ver todas as fotos</a>
+                    <p class="rec-alt-passo">Não é você? <a href="#">Tentar outra foto</a></p>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+    // Simulação apenas de design — não há backend de reconhecimento facial.
+    var input = document.getElementById('rec-foto');
+    var preview = document.getElementById('rec-preview');
+    var passos = document.querySelectorAll('.rec-passo');
+    var barra = document.querySelector('.rec-barra');
+    var contador = document.querySelector('.rec-contador');
+    var resultado = document.querySelector('[data-passo="3"]');
+
+    if (!input) return;
+
+    input.addEventListener('change', function () {
+        var file = this.files && this.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            alert('Selecione apenas arquivos de imagem.');
+            return;
+        }
+
+        var img = new Image();
+        img.onload = function () {
+            preview.innerHTML = '';
+            preview.appendChild(img);
+            preview.classList.add('rec-preview-ativo');
+
+            // Simula o fluxo da IA (apenas visual)
+            var passo1 = document.querySelector('[data-passo="1"]');
+            var passo2 = document.querySelector('[data-passo="2"]');
+            passo1.classList.remove('rec-passo-ativo');
+            passo2.classList.add('rec-passo-ativo');
+
+            var p = 0;
+            var n = 0;
+            var timer = setInterval(function () {
+                p += 13;
+                n += 112;
+                barra.style.setProperty('--p', Math.min(p, 95) + '%');
+                contador.textContent = Math.min(n, 1240);
+                if (p >= 95) {
+                    clearInterval(timer);
+                    setTimeout(function () {
+                        barra.style.setProperty('--p', '100%');
+                        contador.textContent = '1 240';
+                        passo2.classList.remove('rec-passo-ativo');
+                        resultado.classList.add('rec-passo-ativo');
+                    }, 400);
+                }
+            }, 60);
+        };
+        img.src = URL.createObjectURL(file);
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}Fotógrafo | Início{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <div class="hero-conteudo">
+            <span class="sobretitulo">ISMAEL PESSOA · FOTOGRAFIA</span>
+            <h1>Histórias reais, lembranças para sempre.</h1>
+            <p>Fotografia com sensibilidade para celebrar pessoas, encontros e momentos únicos.</p>
+            <div class="hero-acoes">
+                <a href="{% url 'orcamento' %}" class="botao">Vamos conversar</a>
+                <a href="{% url 'postagem_lista' %}" class="botao botao-secundario">Ver trabalhos</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="secao sobre-secao">
+    <div class="container sobre-grid">
+        <div class="sobre-imagem">
+            <img src="{% static 'img/foto3.jpg' %}" alt="Fotógrafo preparando a câmera diante de uma paisagem nas montanhas" loading="lazy">
+            <span class="sobre-legenda">Olhar atento. Momentos espontâneos.</span>
+        </div>
+        <div class="sobre-texto">
+            <span class="sobretitulo">UM POUCO SOBRE MIM</span>
+            <h2>Fotografar é guardar o que a vida tem de mais bonito.</h2>
+            <p>Sou fotógrafo profissional, com mais de 10 anos de experiência em eventos. Meu objetivo é transformar momentos especiais em imagens que você vai querer revisitar por muitos anos.</p>
+            <p>Trabalho com paciência, qualidade e atendimento próximo para que cada história seja registrada com autenticidade.</p>
+            <a href="{% url 'orcamento' %}" class="link-destaque">Conte-me sobre seu evento <span aria-hidden="true">↗</span></a>
+        </div>
+    </div>
+</section>
+
+<section class="secao galeria-secao">
+    <div class="container">
+        <div class="titulo-secao">
+            <span class="sobretitulo">UM OLHAR, MUITAS HISTÓRIAS</span>
+            <h2>Fotografia com personalidade</h2>
+            <p>Retratos, natureza e os detalhes que fazem cada instante ser único.</p>
+        </div>
+        <div class="galeria-grid">
+            <figure class="galeria-item galeria-item-alta">
+                <img src="{% static 'img/foto1.jpg' %}" alt="Retrato em preto e branco de duas pessoas idosas sorrindo" loading="lazy">
+                <figcaption>Histórias que atravessam gerações</figcaption>
+            </figure>
+            <figure class="galeria-item">
+                <img src="{% static 'img/foto4.jpg' %}" alt="Retrato artístico de um tigre" loading="lazy">
+                <figcaption>Natureza e expressão</figcaption>
+            </figure>
+            <figure class="galeria-item">
+                <img src="{% static 'img/foto2.jpg' %}" alt="Câmera fotográfica e caderno sobre um mapa de viagem" loading="lazy">
+                <figcaption>Pronto para a próxima história</figcaption>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<section class="secao">
+    <div class="container">
+        <div class="titulo-secao">
+            <h2>Pacotes</h2>
+            <p>Escolha a experiência que melhor combina com o seu evento.</p>
+        </div>
+        <div class="pacotes-grid">
+            {% for pacote in pacotes %}
+            <div class="card-pacote">
+                <h3>{{ pacote.nome }}</h3>
+                {% if pacote.foto %}
+                <img src="{{ pacote.foto.url }}" alt="Foto do pacote {{ pacote.nome }}" loading="lazy">
+                {% else %}
+                <img src="{% static 'img/foto3.jpg' %}" alt="Imagem padrão para o pacote {{ pacote.nome }}" loading="lazy">
+                {% endif %}
+                <div class="preco">R$ {{ pacote.preco|floatformat:2 }}</div>
+                <p>{{ pacote.descricao|truncatewords:20 }}</p>
+                <a href="{% url 'pacote_detalhe' pacote.slug %}" class="botao">Ver detalhes</a>
+            </div>
+            {% empty %}
+            <p class="estado-vazio">Nenhum pacote disponível no momento.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="secao">
+    <div class="container">
+        <div class="titulo-secao">
+            <h2>Eventos Recentes</h2>
+            <p>Alguns momentos registrados ao longo do caminho.</p>
+        </div>
+        <div class="posts-grid">
+            {% for postagem in postagens %}
+            <div class="post-card">
+                {% if postagem.foto %}
+                <img src="{{ postagem.foto.url }}" alt="{{ postagem.titulo }}">
+                {% else %}
+                <img src="{% static 'img/foto3.jpg' %}" alt="Fotógrafo em uma paisagem de montanha">
+                {% endif %}
+                <div class="conteudo">
+                    <h3>{{ postagem.titulo }}</h3>
+                    <div class="data">{{ postagem.data_evento|default:"Data não informada" }}</div>
+                    <p>{{ postagem.descricao|truncatewords:20 }}</p>
+                    <a href="{% url 'postagem_detalhe' postagem.slug %}" class="botao botao-secundario">Ver mais</a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="estado-vazio">Nenhum evento publicado no momento.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="secao chamada-final">
+    <div class="container">
+        <span class="sobretitulo">SEU MOMENTO MERECE SER LEMBRADO</span>
+        <h2>Vamos criar algo especial?</h2>
+        <p>Conte um pouco sobre a sua ideia e receba uma proposta feita para você.</p>
+        <a href="{% url 'orcamento' %}" class="botao">Solicitar orçamento</a>
+    </div>
+</section>
+{% endblock %}

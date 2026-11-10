@@ -27,6 +27,7 @@
       <button type="button" class="btn btn-primary btn-scan" id="btnScan">Escanear Rosto</button>
       <button type="button" class="btn btn-outline" id="btnUpload">Enviar Foto</button>
       <input type="file" id="fileInput" accept="image/*" class="hidden">
+      {% csrf_token %}
     </div>
 
     <div class="scan-status" id="scanStatus">
@@ -36,8 +37,8 @@
 
     <div id="resultadoScan" class="resultado-scan hidden">
       <div class="resultado-badge" id="badgeTotal">0 fotos encontradas</div>
-      <p>Clique abaixo para ver a prévia com marca d'água e o QR code de pagamento.</p>
-      <a href="{% url 'resultado' 'DEMO' %}" class="btn btn-primary mt-3">Ver prévia e QR code</a>
+      <p id="resultadoTexto"></p>
+      <a href="#" id="linkResultado" class="btn btn-primary mt-3 hidden">Ver prévia e QR code</a>
     </div>
   </div>
 </section>
@@ -46,6 +47,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
   const btnScan = document.getElementById('btnScan');
   const btnUpload = document.getElementById('btnUpload');
   const fileInput = document.getElementById('fileInput');
@@ -53,32 +55,86 @@ document.addEventListener('DOMContentLoaded', function() {
   const statusText = document.getElementById('statusText');
   const resultadoScan = document.getElementById('resultadoScan');
   const badgeTotal = document.getElementById('badgeTotal');
+  const resultadoTexto = document.getElementById('resultadoTexto');
+  const linkResultado = document.getElementById('linkResultado');
+  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  let cameraPronta = false;
 
   async function initCamera() {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 960 } }
+      });
       video.srcObject = stream;
+      video.addEventListener('loadedmetadata', function() { cameraPronta = true; }, { once: true });
     } catch (e) {
       console.warn('Câmera não disponível:', e);
+      btnScan.disabled = true;
+      btnScan.textContent = 'Câmera indisponível';
     }
   }
   initCamera();
 
-  function simularEscaneamento(texto) {
+  function mostrarCarregando(texto) {
+    resultadoScan.classList.add('hidden');
     scanStatus.style.display = 'block';
     statusText.textContent = texto;
     btnScan.disabled = true;
-    setTimeout(function() {
-      badgeTotal.textContent = '4 fotos encontradas';
-      scanStatus.style.display = 'none';
-      resultadoScan.classList.remove('hidden');
-    }, 2500);
+    btnUpload.disabled = true;
   }
 
-  btnScan.addEventListener('click', function() { simularEscaneamento('Analisando rosto...'); });
+  function mostrarResultado(total, texto, url) {
+    scanStatus.style.display = 'none';
+    btnScan.disabled = !cameraPronta;
+    btnUpload.disabled = false;
+    badgeTotal.textContent = total === 1 ? '1 foto encontrada' : total + ' fotos encontradas';
+    resultadoTexto.textContent = texto;
+    if (url) {
+      linkResultado.href = url;
+      linkResultado.classList.remove('hidden');
+    } else {
+      linkResultado.classList.add('hidden');
+    }
+    resultadoScan.classList.remove('hidden');
+  }
+
+  async function buscar(blob, nomeArquivo) {
+    const dados = new FormData();
+    dados.append('foto', blob, nomeArquivo);
+    try {
+      const resp = await fetch('{% url "buscar_rosto" %}', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken },
+        body: dados,
+      });
+      const json = await resp.json();
+      if (!resp.ok) {
+        mostrarResultado(0, json.erro || 'Não foi possível analisar a foto.', null);
+      } else if (json.total === 0) {
+        mostrarResultado(0, 'Não encontramos você nas fotos deste evento. Tente outra foto, de frente e com boa luz.', null);
+      } else {
+        mostrarResultado(json.total, "Clique abaixo para ver a prévia com marca d'água e o QR code de pagamento.", json.url);
+      }
+    } catch (e) {
+      mostrarResultado(0, 'Erro de conexão. Tente novamente.', null);
+    }
+  }
+
+  btnScan.addEventListener('click', function() {
+    if (!cameraPronta || !video.videoWidth) return;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    mostrarCarregando('Procurando você nas fotos...');
+    canvas.toBlob(function(blob) { buscar(blob, 'selfie.jpg'); }, 'image/jpeg', 0.92);
+  });
+
   btnUpload.addEventListener('click', function() { fileInput.click(); });
   fileInput.addEventListener('change', function() {
-    if (fileInput.files.length > 0) simularEscaneamento('Processando imagem enviada...');
+    if (fileInput.files.length === 0) return;
+    mostrarCarregando('Procurando você nas fotos...');
+    buscar(fileInput.files[0], fileInput.files[0].name);
+    fileInput.value = '';
   });
 });
 </script>

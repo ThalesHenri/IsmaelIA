@@ -39,3 +39,10 @@ logs/
 # Arquivos do Sistema Operacional
 .DS_Store
 Thumbs.db
+# Reconhecimento facial: modelos baixados, cache e fotos dos clientes
+src/modelos_face/*.onnx
+src/modelos_face/*.pkl
+src/modelos_face/*.tmp
+src/fotos_evento/*
+!src/fotos_evento/LEIA-ME.txt
+src/media/

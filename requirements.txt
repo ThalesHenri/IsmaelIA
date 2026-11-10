@@ -3,3 +3,6 @@ Django==5.2.18
 pillow==12.3.0
 sqlparse==0.6.0
 typing_extensions==4.16.0
+qrcode==8.2
+numpy>=1.26
+opencv-python-headless>=4.8

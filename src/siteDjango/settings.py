@@ -126,3 +126,20 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Uploads (imagens cadastradas pelo admin)
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Reconhecimento facial (OpenCV)
+# Coloque as fotos do evento nesta pasta (subpastas também são lidas).
+FOTOS_EVENTO_DIR = BASE_DIR / 'fotos_evento'
+# Modelos .onnx baixados com: python manage.py baixar_modelos_face
+FACE_MODELS_DIR = BASE_DIR / 'modelos_face'
+# Cache dos rostos já analisados (recriado automaticamente).
+FACE_CACHE_FILE = BASE_DIR / 'modelos_face' / 'indice_rostos.pkl'
+# Similaridade mínima para considerar a mesma pessoa (0 a 1).
+# Aumente se aparecerem fotos de outras pessoas; diminua se faltarem fotos.
+FACE_MATCH_THRESHOLD = 0.363
+# Tamanho máximo da foto enviada pelo cliente (bytes).
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024

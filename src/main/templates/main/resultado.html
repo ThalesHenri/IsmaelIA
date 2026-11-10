@@ -16,9 +16,9 @@
     <div class="preview-area">
       <h2>Prévia com Marca d'Água</h2>
       <div class="fotos-grid">
-        {% for foto in fotos %}
+        {% for previa in previas %}
           <div class="foto-item">
-            <img src="{% static 'img/foto-padrao.jpg' %}" alt="Prévia protegida com marca d'água">
+            <img src="{{ previa }}" alt="Prévia protegida com marca d'água" loading="lazy">
             <div class="watermark-badge">© Ismael Pessoa — Amostra</div>
           </div>
         {% empty %}
@@ -29,7 +29,11 @@
 
     <div class="pagamento-card">
       <h2>Adquira suas fotos</h2>
-      <p class="valor">R$ {{ sessao.valor_total }} <span>total</span></p>
+      {% if sessao.valor_total %}
+        <p class="valor">R$ {{ sessao.valor_total }} <span>total</span></p>
+      {% else %}
+        <p class="valor">Valor a definir</p>
+      {% endif %}
       <div class="qr-container">
         <img src="data:image/png;base64,{{ qr_b64 }}" alt="QR Code Pix" class="qr-img">
         <p class="qr-label">Escaneie para pagar via Pix (demonstração)</p>

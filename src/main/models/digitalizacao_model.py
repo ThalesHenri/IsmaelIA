@@ -71,6 +71,12 @@ class SessaoDigitalizacao(models.Model):
         default=0.00,
         verbose_name="Valor total",
     )
+    fotos_encontradas = models.JSONField(
+        default=list,
+        blank=True,
+        verbose_name="Fotos encontradas",
+        help_text="Arquivos da pasta de fotos do evento em que o rosto do cliente aparece",
+    )
     pago = models.BooleanField(default=False, verbose_name="Pago")
     criado_em = models.DateTimeField(auto_now_add=True)
 

@@ -1,0 +1,2 @@
+Os modelos .onnx são baixados com:
+    python manage.py baixar_modelos_face
